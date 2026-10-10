@@ -1,0 +1,11 @@
+flowchart LR
+  R[Passenger reader] --> RM[lock mutex; increment count]
+  RM --> F{first reader?}
+  F -->|yes| W[lock writer semaphore]
+  F -->|no| CP[copy seq, positions, seq]
+  W --> CP --> DM[decrement under mutex]
+  DM --> L{last reader?}
+  L -->|yes| UW[unlock writer semaphore]
+  C[Controller writer] --> EW[lock writer semaphore]
+  EW --> UP[seq_a++; positions; seq_b=seq_a]
+  UP --> EU[unlock writer semaphore]

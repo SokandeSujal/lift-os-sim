@@ -1,0 +1,11 @@
+flowchart TD
+  F[Forked at arrival] --> P[Write atomic hall-call Request]
+  P --> O{Parent PID changed?}
+  O -->|yes| E[Exit orphan]
+  O -->|no| T[Timed wait on go]
+  T -->|timeout| R[Read floor board] --> O
+  T -->|CMD_BOARD| C{sem_trywait capacity}
+  C -->|success| B[BOARDED + ack]
+  C -->|full| U[FULL + ack]
+  B & U --> O
+  T -->|CMD_EXIT| X[sem_post capacity + ack + exit]

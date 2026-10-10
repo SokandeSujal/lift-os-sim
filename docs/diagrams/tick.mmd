@@ -1,0 +1,13 @@
+flowchart TD
+  A[Start tick t] --> F[Fork arriving passengers]
+  F --> R[Read exact request bytes and sort IDs]
+  R --> AS[Assign unassigned waiting passengers]
+  AS --> L[For each lift choose target]
+  L --> X{At target?}
+  X -->|yes| S[Drop then board in ID order]
+  X -->|no| M[Move one floor]
+  L -->|no stop| I[Idle]
+  S & M & I --> B[Write floor board]
+  B --> V[Render and record frame]
+  V --> W[Reap eligible children]
+  W --> N[t = t + 1]

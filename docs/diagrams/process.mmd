@@ -1,0 +1,8 @@
+flowchart LR
+  C[Controller: parent, scheduler, clock, renderer] -->|fork| P[Passenger processes]
+  P -->|one atomic Request each| Q{{Pipe}}
+  Q --> C
+  C <--> M[(MAP_SHARED anonymous memory)]
+  P <--> M
+  M --- S[Capacity semaphores]
+  M --- B[Readers-writers floor board]
