@@ -1,0 +1,6 @@
+*.o
+lift_sim
+tests/test_core
+out/*
+!out/.gitkeep
+*.log

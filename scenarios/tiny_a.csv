@@ -1,0 +1,7 @@
+@floors=10
+@lifts=1
+@capacity=6
+@start=0
+1,0,8,9
+2,0,2,3
+3,0,5,6
