@@ -6,9 +6,9 @@ Change only the lift shafts and moving cars in the existing simulation. Preserve
 
 ## Visual design
 
-Each shaft becomes a narrow brushed-steel tower with dark guide rails, inset highlights, and a subtle recessed center. Each moving car becomes a framed metal cabin inspired by a modern observation lift: beveled casing, warm ceiling light, glass front, compact lift badge, and a direction indicator.
+Each shaft becomes a recessed mechanical channel with dark guide rails, cable lines, inset highlights, and a segmented center wall. Each moving car becomes a visibly open metal cabin: brushed header, compact illuminated lift badge and direction indicator, thick side posts, warm ceiling spots, paneled back wall, handrail, and a perspective floor.
 
-Riders remain visible at all times through the glass front. A service tick adds a warm light and slight frame glow rather than splitting the door panels. Movement, floor position, rider data, and accessibility titles continue to come from the existing frame renderer.
+Riders remain visible at all times inside the open cabin and stand on its floor. A service tick strengthens the warm light and frame glow. Movement, floor position, rider data, and accessibility titles continue to come from the existing frame renderer.
 
 ## Implementation and verification
 
