@@ -1,7 +1,10 @@
 *.o
 lift_sim
+lift_sim.exe
 tests/test_core
+tests/test_core.exe
 out/*
 !out/.gitkeep
 *.log
 .chrome-capture/
+__pycache__/

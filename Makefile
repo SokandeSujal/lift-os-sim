@@ -1,9 +1,10 @@
 CC := gcc
+PYTHON ?= python3
 CFLAGS := -std=c11 -Wall -Wextra -Werror -O2 -pthread -Iinclude
 LDLIBS := -pthread -lrt
 SRC := src/main.c src/core.c src/scenario.c src/passenger.c src/board.c src/render_term.c src/export.c
 OBJ := $(SRC:.c=.o)
-.PHONY: all test smoke integration asan clean
+.PHONY: all test smoke integration web-test asan clean
 all: lift_sim
 lift_sim: $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
@@ -29,7 +30,9 @@ integration: lift_sim
 	@awk 'FNR==NR&&/Average wait:/{f=$$3}FNR!=NR&&/Average wait:/{n=$$3}END{exit !(n<f)}' out/fcfs_check.txt out/nearest_check.txt
 	@awk 'FNR==NR&&/Average load:/{f=$$3+0}FNR!=NR&&/Average load:/{n=$$3+0}END{exit !(n>f)}' out/fcfs_check.txt out/nearest_check.txt
 	@echo 'PASS synchronization and policy integration'
+web-test: lift_sim
+	$(PYTHON) tests/test_web_server.py
 asan: CFLAGS := -std=c11 -Wall -Wextra -Werror -O1 -g -fsanitize=address,undefined -pthread -Iinclude
 asan: clean all
 clean:
-	rm -f $(OBJ) lift_sim tests/test_core out/*.js out/*.csv out/*.txt
+	rm -f $(OBJ) lift_sim lift_sim.exe tests/test_core tests/test_core.exe out/*.js out/*.json out/*.csv out/*.txt

@@ -28,7 +28,7 @@ cat <<'MENU'
 2. Run rush UI — FCFS
 3. Run rush UI — nearest-stop-first
 4. Compare both policies
-5. Open web visualization
+5. Start interactive web simulator
 6. Readers-writers sync vs no-sync
 7. Zombie demo
 8. Orphan demo
@@ -45,7 +45,7 @@ case "${choice,,}" in
   2) ./lift_sim --scenario scenarios/rush_morning.csv --policy fcfs ;;
   3) ./lift_sim --scenario scenarios/rush_morning.csv --policy nearest ;;
   4) compare ;;
-  5) command -v xdg-open >/dev/null && xdg-open viz/index.html >/dev/null 2>&1 & echo "Open: $(pwd)/viz/index.html" ;;
+  5) ./run-web.sh ;;
   6) echo "Synchronized:"; ./lift_sim --scenario scenarios/rush_morning.csv --policy nearest --no-ui --fast | grep 'Board corruption:'; echo "No synchronization:"; ./lift_sim --scenario scenarios/rush_morning.csv --policy nearest --no-ui --fast --no-sync | grep 'Board corruption:' ;;
   7) ./lift_sim --scenario scenarios/rush_morning.csv --policy nearest --no-ui --fast --lazy-reap 20 >/tmp/lift-zombie.log & zp=$!; sleep 2; ps -el | grep -E 'defunct| Z ' || true; wait "$zp" ;;
   8) ./lift_sim --scenario scenarios/rush_morning.csv --policy nearest --no-ui >/tmp/lift-orphan.log & op=$!; sleep 1; echo "Controller=$op passengers=$(pgrep -P "$op" | tr '\n' ' ')"; kill -9 "$op"; wait "$op" 2>/dev/null || true; sleep 1; pgrep -x lift_sim >/dev/null && echo "FAIL: passengers remain" || echo "PASS: orphan passengers exited" ;;

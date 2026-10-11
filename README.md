@@ -2,9 +2,9 @@
 
 > A building with several lifts compares FCFS and nearest-stop-first on the same passengers, showing how scheduling policy changes waiting time and utilization.
 
-This Operating Systems Laboratory mini project uses Linux processes, `fork`, `waitpid`, pipes, process-shared semaphores, readers-writers synchronization, FCFS and an SRTF analogue. The core scheduler is pure C; the live controller wraps it with real passenger processes. A terminal view and self-contained browser race visualize the same exported run.
+This Operating Systems Laboratory mini project uses Linux processes, `fork`, `waitpid`, pipes, process-shared semaphores, readers-writers synchronization, FCFS and an SRTF analogue. The core scheduler is pure C; the live controller wraps it with real passenger processes. A terminal view and a light, game-like browser simulator visualize the same C engine.
 
-![Web race](docs/screenshots/web-race.png)
+![Interactive lift simulator](docs/screenshots/web-simulator.png)
 
 ## Build and run
 
@@ -18,13 +18,19 @@ make smoke
 ./run.sh
 ```
 
-The fastest way to prepare the browser comparison is:
+### Interactive browser version
+
+From WSL2, run:
 
 ```bash
-./run.sh compare
+./run-web.sh
 ```
 
-Then double-click `viz/index.html`. It works over `file://`; no server, packages, internet connection or external JavaScript library is required.
+Open the address printed in the terminal, normally <http://127.0.0.1:8765>. Enter the number of people, floors, lifts and capacity, then select **Start C simulation**. Stop the local server with `Ctrl+C`.
+
+The server is only a small Python standard-library bridge. It validates the form, creates one temporary scenario, and runs the compiled C controller for both policies. Scheduling, process creation, semaphores, metrics and exported frames all remain in C. No package installation, JavaScript library or internet connection is required.
+
+For the static/offline mode, run `./run.sh compare` and then open `viz/index.html` directly. It plays the most recently exported C run.
 
 ## Direct commands
 

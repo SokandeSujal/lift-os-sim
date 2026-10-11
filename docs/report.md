@@ -14,7 +14,7 @@ To implement a deterministic multi-process lift controller in C11 and use a fami
 - Enforce lift capacity through process-shared counting semaphores.
 - Protect a shared floor display using the first readers-writers solution.
 - Keep scheduling pure so hand-verified cases and live execution use identical logic.
-- Present the comparison in an ANSI terminal and a synchronized offline web race.
+- Present the comparison in an ANSI terminal and an interactive, C-backed browser race.
 
 # Theory
 
@@ -101,7 +101,7 @@ Nearest reduces average wait by 58.8%, raises average load, wastes fewer moves a
 
 ![Terminal visualization](screenshots/terminal.png)
 
-![Synchronized browser race](screenshots/web-race.png)
+![Interactive browser race](screenshots/web-simulator.png)
 
 # Design decisions
 
@@ -135,4 +135,4 @@ The project combines five operating-systems laboratory topics in one explainable
 9. **How is a zombie created?** A passenger exits while the controller deliberately delays `waitpid`; reaping removes it.
 10. **How does a passenger notice orphaning?** Its timed loop detects that `getppid()` no longer equals the original controller PID.
 11. **What happens without board semaphores?** Readers can observe `seq_a != seq_b`, proving a half-written display.
-12. **Why export JavaScript rather than JSON fetch?** Script tags work when the visualization is opened directly through `file://`.
+12. **Why export both JSON and JavaScript?** The local server returns C-generated JSON for interactive runs, while script tags keep the last exported run usable directly through `file://`.
