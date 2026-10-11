@@ -15,6 +15,20 @@
 @media(max-width:980px){.setup{grid-template-columns:1fr;min-height:0}.mini-scene{display:none}.race{grid-template-columns:1fr}.scene{height:500px}.sim-head{align-items:flex-end}}
 @media(max-width:620px){.page{width:min(100% - 18px,1440px);padding-top:10px}.brand p,.engine-tag span{display:none}.setup{padding:24px 18px;border-radius:14px}.setup h2{font-size:42px}.form-grid{grid-template-columns:1fr}.start-btn,.form-error{grid-column:auto}.sim-head{align-items:flex-start;flex-direction:column}.scene{height:430px}.queue{width:40%}.shafts{left:49%}.stats{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2){border-right:0}.result{align-items:flex-start;flex-direction:column}.control-dock{gap:5px}.control-dock select{width:58px}.learn-grid{grid-template-columns:1fr}}
 .person{width:21px;height:32px;flex-basis:21px}.person .head{width:13px;height:13px;border-radius:5px}.person .head:after{left:2px;top:-3px;font-size:8px}.person .body{width:18px;height:19px;border-radius:6px 6px 2px 2px}.person .dest{left:13px;min-width:14px;height:14px;font-size:8px;line-height:12px}
+/* Lift-only visual refresh: brushed shaft, glass cabin and always-visible riders. */
+.shaft{border:0;border-radius:2px;background:linear-gradient(90deg,#52677c 0 3px,#aec0cf 3px 6px,#e7eef3 6px 14%,#cbd6df 48%,#eff4f7 76%,#9dafbd calc(100% - 6px),#52677c calc(100% - 3px));box-shadow:inset 0 0 0 1px #8397aa,inset 7px 0 12px #ffffff8f,inset -7px 0 12px #60758b42,0 2px 5px #1731531f;overflow:visible}
+.shaft:before,.shaft:after{content:"";position:absolute;top:0;bottom:0;width:3px;background:linear-gradient(90deg,#253d55,#96aabd,#314a62);z-index:1}.shaft:before{left:3px}.shaft:after{right:3px;transform:scaleX(-1)}
+.shaft-label{display:none}
+.car{left:7%;width:86%;height:calc(100% / var(--floors) - 3px);border:1px solid #344b61;border-radius:2px;background:linear-gradient(145deg,#f4f7f8,#9bacba 45%,#dce5ea 70%,#718697);box-shadow:0 0 0 2px #b9c7d1,0 0 0 4px #415970,0 5px 9px #17315355,inset 0 0 9px #fff;overflow:hidden;transition:bottom var(--move-time) linear,box-shadow .2s ease;z-index:3}
+.car:before{content:"";position:absolute;z-index:5;left:12%;right:12%;top:3px;height:3px;border-radius:50%;background:#ffe8a2;box-shadow:0 2px 8px 2px #ffd36c9c;transition:.2s}
+.car:after{content:"";position:absolute;z-index:4;inset:5px 5px 4px;border:1px solid #6f8291;border-radius:1px;box-shadow:inset 0 0 0 2px #dfe7eb,inset 0 0 9px #647b8d66;pointer-events:none}
+.car-top{position:absolute;z-index:7;inset:0;background:transparent;color:#fff;display:block;padding:0;font-size:8px;pointer-events:none}
+.car-top b{position:absolute;left:50%;top:50%;transform:translate(-50%,-35%);min-width:24px;padding:3px 5px;border-radius:3px;background:linear-gradient(#3d5268,#20364c);border:1px solid #61788d;box-shadow:0 1px 3px #10263c66;text-align:center;font-size:8px;letter-spacing:.04em}
+.car-top span{position:absolute;right:8px;top:7px;color:#eaf4ff;font-size:8px;text-shadow:0 1px 2px #10263c}
+.car-body{position:absolute;inset:6px;background:linear-gradient(110deg,#7e94a580,#edf4f7a8 35%,#98aab788 70%,#60798c99);overflow:hidden}
+.door{top:0;bottom:0;width:50%;border:0;background:linear-gradient(100deg,#dfe8ed66,#6f879855 58%,#f3f7f988);opacity:.52;backdrop-filter:blur(.25px);transition:opacity .2s ease,filter .2s ease}.door.left{border-right:1px solid #536b7f99}.door.right{border-left:1px solid #e9f0f4aa}.car.serving .door.left,.car.serving .door.right{transform:none;opacity:.2;filter:brightness(1.2)}
+.car.serving{box-shadow:0 0 0 2px #d7e1e7,0 0 0 4px #415970,0 0 15px 3px #ffd4778a,0 5px 9px #17315355}.car.serving:before{background:#fff4c5;box-shadow:0 2px 11px 4px #ffd05bbd}
+.riders{z-index:6;inset:9px 7px 5px;align-content:flex-end;gap:3px}.rider{position:relative;width:8px;height:10px;margin-top:5px;border-radius:4px 4px 2px 2px;box-shadow:0 0 0 1px #ffffff75}.rider:before{content:"";position:absolute;width:6px;height:6px;left:1px;top:-6px;border-radius:50%;background:#efc08e;border:1px solid #344b61}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.car,.door{transition:none!important}}
 </style>
 </head>
@@ -80,7 +94,7 @@ function makeBuilding(key,title,subtitle){
 function decisionFor(run,fr,t){
   const events=run.events.filter(e=>e.t===t&&['PREEMPT','BOARD','DROP','FULL'].includes(e.ev)); const e=events.at(-1);
   if(e?.ev==='PREEMPT')return ['Changed direction',`A closer request made lift ${e.l+1} choose a new target.`];
-  if(e?.ev==='BOARD')return ['Doors open',`Person ${e.p} entered lift ${e.l+1}.`];
+  if(e?.ev==='BOARD')return ['Boarding now',`Person ${e.p} entered lift ${e.l+1}.`];
   if(e?.ev==='DROP')return ['Destination reached',`Person ${e.p} left lift ${e.l+1}.`];
   if(e?.ev==='FULL')return ['Lift is full',`Person ${e.p} stays in the queue for another trip.`];
   const moving=fr.lifts.find(l=>l.a==='U'||l.a==='D');
