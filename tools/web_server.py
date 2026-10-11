@@ -66,11 +66,10 @@ def scenario_text(settings: dict[str, int]) -> str:
 
 def simulate(settings: dict[str, int]) -> dict[str, Any]:
     """Run both policies through the compiled C controller and load its JSON."""
-    executable = ROOT / "lift_sim"
-    if not executable.exists() and (ROOT / "lift_sim.exe").exists():
-        executable = ROOT / "lift_sim.exe"
+    executable = ROOT / ("lift_sim.exe" if os.name == "nt" else "lift_sim")
     if not executable.exists():
-        raise RuntimeError("lift_sim is missing; run make first")
+        expected = "lift_sim.exe" if os.name == "nt" else "lift_sim"
+        raise RuntimeError(f"{expected} is missing; build the simulator first")
     with tempfile.TemporaryDirectory(prefix="lift-web-") as folder:
         temp = Path(folder)
         scenario = temp / "web_demo.csv"
